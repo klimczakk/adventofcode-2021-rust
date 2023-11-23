@@ -1,14 +1,14 @@
-use std::{fs::{File, read_to_string}, collections::HashMap, process::ExitCode};
+use std::{fs::read_to_string, process::ExitCode};
 
 use args::Args;
 use clap::Parser;
 use solvers::*;
-use error::*;
+
 
 mod args;
 mod solvers;
 mod error {
-	use std::{io, error::Error, fmt::Display};
+	use std::io;
     use crate::solvers::InvalidInputError;
 
 	#[derive(Debug)]
@@ -16,7 +16,6 @@ mod error {
 
 	#[derive(Debug)]
 	pub enum MainError {
-		CommandLineInput(CommandLineInputError),
 		InvalidInput(InvalidInputError),
 		IO(io::Error),
 	}

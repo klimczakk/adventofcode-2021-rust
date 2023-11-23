@@ -13,6 +13,36 @@ pub const SOLVERS: Map<&'static str, Solver> = phf_map!(
 );
 
 fn day1_1(input: String) -> Result<i32, InvalidInputError> {
+	let values = string_to_i32s(input)?;
+
+	Ok(num_of_increments(&values))
+}
+
+fn day1_2(input: String) -> Result<i32, InvalidInputError> {
+	let values = string_to_i32s(input)?;
+
+	let sums: Box<[i32]> = values
+		.windows(3)
+		.map(|cells| cells.iter().sum())
+		.collect();
+
+	Ok(num_of_increments(&sums))
+}
+
+fn num_of_increments(values: &[i32]) -> i32 {
+	values
+		.iter()
+		.fold((0, values[0]), |(accumulator, last_value), value| {
+			if *value > last_value {
+				(accumulator + 1, *value)
+			} else {
+				(accumulator, *value)
+			}
+		})
+		.0
+}
+
+fn string_to_i32s(input: String) -> Result<Box<[i32]>, InvalidInputError> {
 	type ParseError = <i32 as FromStr>::Err;
 
 	let parsed_results: Box<[Result<i32, ParseError>]> = input
@@ -34,18 +64,5 @@ fn day1_1(input: String) -> Result<i32, InvalidInputError> {
 		.map(Result::<i32, ParseError>::unwrap)
 		.collect();
 
-	Ok(values
-		.iter()
-		.fold((0, values[0]), |(accumulator, last_value), value| {
-			if *value > last_value {
-				(accumulator + 1, *value)
-			} else {
-				(accumulator, *value)
-			}
-		}).0
-	)
-}
-
-fn day1_2(input: String) -> Result<i32, InvalidInputError> {
-	todo!();
+	Ok(values)
 }
