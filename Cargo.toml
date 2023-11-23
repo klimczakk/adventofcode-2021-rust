@@ -1,0 +1,8 @@
+[package]
+name = "adventofcode-2021"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = {version = "*", features = ["derive"]}
+phf = {version = "*", features = ["macros"]}
