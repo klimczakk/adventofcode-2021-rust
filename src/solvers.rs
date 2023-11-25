@@ -10,6 +10,8 @@ pub type Solver = fn(String) -> Result<i32, InvalidInputError>;
 pub const SOLVERS: Map<&'static str, Solver> = phf_map!(
 	"1-1" => day1_1 as Solver,
 	"1-2" => day1_2,
+	"2-1" => day2_1,
+	"2-2" => day2_2,
 );
 
 fn day1_1(input: String) -> Result<i32, InvalidInputError> {
@@ -27,6 +29,72 @@ fn day1_2(input: String) -> Result<i32, InvalidInputError> {
 		.collect();
 
 	Ok(num_of_increments(&sums))
+}
+
+fn day2_1(input: String) -> Result<i32, InvalidInputError> {
+	let [mut depth, mut distance] = [0, 0];
+
+	for line in input.lines() {
+		let	split: Box<[&str]> = line.split(' ').collect();
+
+		let command: &str = match split.first() {
+			Some(value) => value,
+			None => return Err(InvalidInputError),
+		};
+
+		let stringified_value: &str = match split.last() {
+			Some(value) => value,
+			None => return Err(InvalidInputError),
+		};
+
+		let value = match stringified_value.parse::<i32>() {
+			Ok(value) => value,
+			Err(_) => return Err(InvalidInputError),
+		};
+
+		match command {
+			"forward" => distance += value,
+			"down" => depth += value,
+			"up" => depth -= value,
+			_ => return Err(InvalidInputError),
+		}
+	}
+
+	Ok(depth * distance)
+}
+
+fn day2_2(input: String) -> Result<i32, InvalidInputError> {
+	let [mut aim, mut depth, mut distance] = [0, 0, 0];
+
+	for line in input.lines() {
+		let split: Box<[&str]> = line.split(' ').collect();
+
+		let command: &str = match split.first() {
+			Some(value) => value,
+			None => return Err(InvalidInputError),
+		};
+
+		let stringified_value: &str = match split.last() {
+			Some(value) => value,
+			None => return Err(InvalidInputError),
+		};
+
+		let value = match stringified_value.parse::<i32>() {
+			Ok(value) => value,
+			Err(_) => return Err(InvalidInputError),
+		};
+
+		match command {
+			"forward" => {
+				distance += value;
+				depth += aim * value;
+			},
+			"down" => aim += value,
+			"up" => aim -= value,
+			_ => return Err(InvalidInputError),
+		}
+	}
+	Ok(distance * depth)
 }
 
 fn num_of_increments(values: &[i32]) -> i32 {
